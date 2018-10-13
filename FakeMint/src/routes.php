@@ -11,4 +11,32 @@ $app->get('/[{name}]', function (Request $request, Response $response, array $ar
 
     // Render index view
     return $this->renderer->render($response, 'index.phtml', $args);
+
+
+
+});
+$app->group('/api', function () use ($app) {
+
+  $app->post('/registration', function ($request, $response) {
+     $input = $request->getParsedBody();
+     $sql = "INSERT INTO users (userName, pWord, lastName, firstName, email, income) VALUES (:userName, :pWord, :lastName, :firstName, :email, :income)";
+     $sth = $this->db->prepare($sql);
+     $sth->bindParam("userName", $input['userName']);
+     $sth->bindParam("pWord", $input['pWord']);
+     $sth->bindParam("lastName", $input['lastName']);
+     $sth->bindParam("firstName", $input['firstName']);
+     $sth->bindParam("email", $input['email']);
+     $sth->bindParam("income", $input['income']);
+     $sth->execute();
+     return $this->response->withJson($input); });
+
+  $app->get('/login/[{userName}]', function ($request, $response, $args) {
+       $sth = $this->db->prepare(
+         "SELECT * FROM users WHERE userName=:userName"
+       );
+       $sth->bindParam("userName", $args['userName']); $sth->execute();
+       $users = $sth->fetchObject();
+           return $this->response->withJson($users);
+  });
+
 });
