@@ -17,8 +17,8 @@ return [
         ],
         // Database connection settings
         "db" => [
-            "host" => "127.0.0.1:8889",
-            "dbname" => "FakeMint",
+            "host" => "127.0.0.1:3306",
+            "dbname" => "fakeMint",
             "user" => "root",
             "pass" => "root"
         ],
