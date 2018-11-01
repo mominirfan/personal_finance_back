@@ -52,7 +52,7 @@ $app->group('/api', function () use ($app) {
     );
     $sth->bindParam("userID", $input['userID']);
     $sth->bindParam("lastName", $input['lastName']);
-    $sth->bindParam("fistName", $input['firstName']);
+    $sth->bindParam("firstName", $input['firstName']);
     $sth->bindParam("email", $input['email']);
     $sth->bindParam("userName", $input['userName']);
     $sth->bindParam("pWord", $input['pWord']);
