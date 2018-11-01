@@ -43,8 +43,9 @@ $app->group('/api', function () use ($app) {
     $input = $request->getParsedBody();
     $sth = $this->db->prepare(
         "UPDATE users
-        SET lastName=:lastName, firstName=:firstName, email=:email 
-        userName=:userName, pWord=:pWord, income=:income"
+        SET lastName=:lastName, firstName=:firstName, email=:email, 
+        userName=:userName, pWord=:pWord, income=:income
+        WHERE userName=:userName"
     );
     $sth->bindParam("lastName", $input['lastName']);
     $sth->bindParam("fistName", $input['firstName']);
