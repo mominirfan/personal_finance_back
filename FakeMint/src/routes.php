@@ -16,8 +16,8 @@ $app->get('/[{name}]', function (Request $request, Response $response, array $ar
 
 });
 $app->group('/api', function () use ($app) {
-
-  $app->post('/registration', function ($request, $response) {
+  $app->group('/users', function () use ($app) {
+    $app->post('/registration', function ($request, $response) {
      $input = $request->getParsedBody();
      $sql = "INSERT INTO users (userName, pWord, lastName, firstName, email, income) VALUES (:userName, :pWord, :lastName, :firstName, :email, :income)";
      $sth = $this->db->prepare($sql);
@@ -29,18 +29,18 @@ $app->group('/api', function () use ($app) {
      $sth->bindParam("income", $input['income']);
      $sth->execute();
      return $this->response->withJson($input); 
-    });
+      });
 
-  $app->get('/login/[{userName}]', function ($request, $response, $args) {
+    $app->get('/login/[{userName}]', function ($request, $response, $args) {
        $sth = $this->db->prepare(
          "SELECT * FROM users WHERE userName=:userName"
        );
        $sth->bindParam("userName", $args['userName']); $sth->execute();
        $users = $sth->fetchObject();
            return $this->response->withJson($users);
-  });
+    });
 
-  $app->put('/edit', function ($request, $response, $args) {
+    $app->put('/edit', function ($request, $response, $args) {
     $input = $request->getParsedBody();
     $sth = $this->db->prepare(
         "UPDATE users
@@ -57,27 +57,55 @@ $app->group('/api', function () use ($app) {
     $sth->bindParam("income", $input['income']);
     $sth->execute();
     return $this->response->withJson($input);
+    });
   });
 
   $app->group('/loans', function () use ($app) {
-    $app->post('/add', function ($request, $response) {
+    $app->post('/add-loan', function ($request, $response) {
+    $input = $request->getParsedBody();
+    $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest) 
+    VALUES (:userName, :loanName, :loanAmount, :interest)";
+    $sth = $this->db->prepare($sql);
+    $sth->bindParam("userName", $input['userName']);
+    $sth->bindParam("loanName", $input['loanName']);
+    $sth->bindParam("loanAmount", $input['loanAmount']);
+    $sth->bindParam("interest", $input['interest']);
+    $sth->execute();
+    return $this->response->withJson($input); 
+    });
+
+    $app->put('/edit-loan', function ($request, $response, $args) {
+    $input = $request->getParsedBody();
+    $sth = $this->db->prepare(
+        "UPDATE loans
+        SET loanName=:loanName, loanAmount=:loanAmount
+        WHERE userName=:userName"
+    );
+    $sth->bindParam("loanName", $input['loanName']);
+    $sth->bindParam("loanAmount", $input['loanAmount']);
+    $sth->bindParam("userName", $input['userName']);
+    $sth->execute();
+    return $this->response->withJson($input);
+    });
+  });
+  
+  $app->group('/budget', function () use ($app) {
+    $app->post('/add-budget', function ($request, $response) {
       $input = $request->getParsedBody();
-      $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest) 
-      VALUES (:userName, :loanName, :loanAmount, :interest)";
+      $sql = "INSERT INTO budgets (userName, budgetType, active_date, amt) 
+      VALUES (:userName, :budgetType, now(), :amt)";
       $sth = $this->db->prepare($sql);
       $sth->bindParam("userName", $input['userName']);
-      $sth->bindParam("loanName", $input['loanName']);
-      $sth->bindParam("loanAmount", $input['loanAmount']);
-      $sth->bindParam("interest", $input['interest']);
+      $sth->bindParam("budgetType", $input['budgetType']);
+      $sth->bindParam("amt", $input['amt']);
       $sth->execute();
       return $this->response->withJson($input); 
      });
-  
-     $app->put('/edit', function ($request, $response, $args) {
+     $app->put('/edit-budget', function ($request, $response, $args) {
       $input = $request->getParsedBody();
       $sth = $this->db->prepare(
-          "UPDATE loans
-          SET loanName=:loanName, loanAmount=:loanAmount
+          "UPDATE budgets
+          SET budgetType=:budgetType, amt=:amt
           WHERE userName=:userName"
       );
       $sth->bindParam("loanName", $input['loanName']);
@@ -85,8 +113,7 @@ $app->group('/api', function () use ($app) {
       $sth->bindParam("userName", $input['userName']);
       $sth->execute();
       return $this->response->withJson($input);
-    });
+    });  
   });
-
 });
 
