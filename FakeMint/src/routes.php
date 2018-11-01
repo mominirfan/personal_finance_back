@@ -47,6 +47,7 @@ $app->group('/api', function () use ($app) {
         userName=:userName, pWord=:pWord, income=:income
         WHERE userID=:userID"
     );
+    $sth->bindParam("userID", $input['userID']);
     $sth->bindParam("lastName", $input['lastName']);
     $sth->bindParam("fistName", $input['firstName']);
     $sth->bindParam("email", $input['email']);
