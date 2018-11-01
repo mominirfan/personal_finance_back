@@ -28,7 +28,8 @@ $app->group('/api', function () use ($app) {
      $sth->bindParam("email", $input['email']);
      $sth->bindParam("income", $input['income']);
      $sth->execute();
-     return $this->response->withJson($input); });
+     return $this->response->withJson($input); 
+    });
 
   $app->get('/login/[{userName}]', function ($request, $response, $args) {
        $sth = $this->db->prepare(
@@ -41,9 +42,6 @@ $app->group('/api', function () use ($app) {
 
   $app->put('/edit', function ($request, $response, $args) {
     $input = $request->getParsedBody();
-    echo '<script>';
-    echo 'console.log('. json_encode($input) .')';
-    echo '<script>';
     $sth = $this->db->prepare(
         "UPDATE users
         SET lastName=:lastName, firstName=:firstName, email=:email, 
@@ -57,6 +55,33 @@ $app->group('/api', function () use ($app) {
     $sth->bindParam("userName", $input['userName']);
     $sth->bindParam("pWord", $input['pWord']);
     $sth->bindParam("income", $input['income']);
+    $sth->execute();
+    return $this->response->withJson($input);
+  });
+
+  $app->post('/add-loan', function ($request, $response) {
+    $input = $request->getParsedBody();
+    $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest) 
+    VALUES (:userName, :loanName, :loanAmount, :interest)";
+    $sth = $this->db->prepare($sql);
+    $sth->bindParam("userName", $input['userName']);
+    $sth->bindParam("loanName", $input['loanName']);
+    $sth->bindParam("loanAmount", $input['loanAmount']);
+    $sth->bindParam("interest", $input['interest']);
+    $sth->execute();
+    return $this->response->withJson($input); 
+   });
+
+   $app->put('/edit-loan', function ($request, $response, $args) {
+    $input = $request->getParsedBody();
+    $sth = $this->db->prepare(
+        "UPDATE loans
+        SET loanName=:loanName, loanAmount=:loanAmount
+        WHERE userName=:userName"
+    );
+    $sth->bindParam("loanName", $input['loanName']);
+    $sth->bindParam("loanAmount", $input['loanAmount']);
+    $sth->bindParam("userName", $input['userName']);
     $sth->execute();
     return $this->response->withJson($input);
   });
