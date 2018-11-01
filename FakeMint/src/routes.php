@@ -44,13 +44,13 @@ $app->group('/api', function () use ($app) {
     $sth = $this->db->prepare(
         "UPDATE users
         SET lastName=:lastName, firstName=:firstName, email=:email, 
-        userName=:userName, pWord=:pWord, income=:income
+        userName=:userName2, pWord=:pWord, income=:income
         WHERE userName=:userName"
     );
     $sth->bindParam("lastName", $input['lastName']);
     $sth->bindParam("fistName", $input['firstName']);
     $sth->bindParam("email", $input['email']);
-    $sth->bindParam("userName", $input['userName']);
+    $sth->bindParam("userName", $input['userName2']);
     $sth->bindParam("pWord", $input['pWord']);
     $sth->bindParam("income", $input['income']);
     $sth->execute();
