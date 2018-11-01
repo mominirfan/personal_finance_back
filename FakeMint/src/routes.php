@@ -39,7 +39,7 @@ $app->group('/api', function () use ($app) {
            return $this->response->withJson($users);
   });
 
-  $app->put('/edit/[{userID}]', function ($request, $response, $args) {
+  $app->put('/edit', function ($request, $response, $args) {
     $input = $request->getParsedBody();
     $sth = $this->db->prepare(
         "UPDATE users
@@ -47,7 +47,7 @@ $app->group('/api', function () use ($app) {
         userName=:userName, pWord=:pWord, income=:income
         WHERE userID=:userID"
     );
-    $sth->bindParam("userID", $args['userID']);
+    $sth->bindParam("userID", $input['userID']);
     $sth->bindParam("lastName", $input['lastName']);
     $sth->bindParam("fistName", $input['firstName']);
     $sth->bindParam("email", $input['email']);
