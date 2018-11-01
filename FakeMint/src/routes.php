@@ -85,5 +85,30 @@ $app->group('/api', function () use ($app) {
     $sth->execute();
     return $this->response->withJson($input);
   });
-
+  $app->group('/budget', function () use ($app) {
+    $app->post('/add-budget', function ($request, $response) {
+      $input = $request->getParsedBody();
+      $sql = "INSERT INTO lo (userName, budgetType, active_date, amt) 
+      VALUES (:userName, :budgetType, now(), :amt)";
+      $sth = $this->db->prepare($sql);
+      $sth->bindParam("userName", $input['userName']);
+      $sth->bindParam("budgetType", $input['budgetType']);
+      $sth->bindParam("amt", $input['amt']);
+      $sth->execute();
+      return $this->response->withJson($input); 
+     });
+     $app->put('/edit-budget', function ($request, $response, $args) {
+      $input = $request->getParsedBody();
+      $sth = $this->db->prepare(
+          "UPDATE budgets
+          SET budgetType=:budgetType, amt=:amt
+          WHERE userName=:userName"
+      );
+      $sth->bindParam("loanName", $input['loanName']);
+      $sth->bindParam("loanAmount", $input['loanAmount']);
+      $sth->bindParam("userName", $input['userName']);
+      $sth->execute();
+      return $this->response->withJson($input);
+    });  
+  });
 });
