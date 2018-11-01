@@ -86,6 +86,7 @@ $app->group('/api', function () use ($app) {
     $sth->execute();
     return $this->response->withJson($input);
     });
+  });
   $app->group('/budget', function () use ($app) {
     $app->post('/add-budget', function ($request, $response) {
       $input = $request->getParsedBody();
