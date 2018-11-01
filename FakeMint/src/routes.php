@@ -41,6 +41,9 @@ $app->group('/api', function () use ($app) {
 
   $app->put('/edit', function ($request, $response, $args) {
     $input = $request->getParsedBody();
+    echo '<script>';
+    echo 'console.log('. json_encode($input) .')';
+    echo '<script>';
     $sth = $this->db->prepare(
         "UPDATE users
         SET lastName=:lastName, firstName=:firstName, email=:email, 
