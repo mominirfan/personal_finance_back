@@ -16,7 +16,7 @@ $app->get('/[{name}]', function (Request $request, Response $response, array $ar
 
 });
 $app->group('/api', function () use ($app) {
-  $app->group('/users', function () use ($app) {
+  
     $app->post('/registration', function ($request, $response) {
      $input = $request->getParsedBody();
      $sql = "INSERT INTO users (userName, pWord, lastName, firstName, email, income) VALUES (:userName, :pWord, :lastName, :firstName, :email, :income)";
@@ -29,8 +29,7 @@ $app->group('/api', function () use ($app) {
      $sth->bindParam("income", $input['income']);
      $sth->execute();
      return $this->response->withJson($input); 
-      });
-
+    });
     $app->get('/login/[{userName}]', function ($request, $response, $args) {
        $sth = $this->db->prepare(
          "SELECT * FROM users WHERE userName=:userName"
@@ -58,8 +57,6 @@ $app->group('/api', function () use ($app) {
     $sth->execute();
     return $this->response->withJson($input);
     });
-  });
-  $app->group('/loans', function () use ($app) {
     $app->post('/add-loan', function ($request, $response) {
     $input = $request->getParsedBody();
     $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest) 
@@ -86,8 +83,8 @@ $app->group('/api', function () use ($app) {
     $sth->execute();
     return $this->response->withJson($input);
     });
-  });
-  $app->group('/budget', function () use ($app) {
+  
+  
     $app->post('/add-budget', function ($request, $response) {
       $input = $request->getParsedBody();
       $sql = "INSERT INTO budgets (userName, budgetType, active_date, amt) 
@@ -112,5 +109,5 @@ $app->group('/api', function () use ($app) {
       $sth->execute();
       return $this->response->withJson($input);
     });  
-  });
+  
 });
