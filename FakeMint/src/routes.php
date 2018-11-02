@@ -85,7 +85,18 @@ $app->group('/api', function () use ($app) {
       $sth->execute();
       return $this->response->withJson($input);
     });
-  
+
+    $app->delete('/delete-loan', function($request, $response){
+      $input = $request->getParsedBody();
+      $sth = $this->db->prepare(
+          "DELETE FROM budgets WHERE userName=:userName AND loanName=:loanName"
+      );
+      $sth->bindParam("loanName", $input['loanName']);
+      $sth->bindParam("userName", $input['userName']);
+      $sth->execute();
+      return $this->response->withJson($input);
+
+    });
   
     $app->post('/add-budget', function ($request, $response) {
       $input = $request->getParsedBody();
@@ -105,12 +116,24 @@ $app->group('/api', function () use ($app) {
           SET budgetType=:budgetType, amt=:amt
           WHERE userName=:userName"
       );
-      $sth->bindParam("loanName", $input['loanName']);
-      $sth->bindParam("loanAmount", $input['loanAmount']);
+      $sth->bindParam("budgetType", $input['budgetType']);
+      $sth->bindParam("amt", $input['amt']);
       $sth->bindParam("userName", $input['userName']);
       $sth->execute();
       return $this->response->withJson($input);
     });  
+
+    $app->delete('/delete-budget', function($request, $response){
+      $input = $request->getParsedBody();
+      $sth = $this->db->prepare(
+          "DELETE FROM budgets WHERE userName=:userName AND budgetType=:budgetType"
+      );
+      $sth->bindParam("budgetType", $input['budgetType']);
+      $sth->bindParam("userName", $input['userName']);
+      $sth->execute();
+      return $this->response->withJson($input);
+
+    });
   
 });
 
