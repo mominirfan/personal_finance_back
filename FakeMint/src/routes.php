@@ -89,7 +89,7 @@ $app->group('/api', function () use ($app) {
     $app->delete('/delete-loan', function($request, $response){
       $input = $request->getParsedBody();
       $sth = $this->db->prepare(
-          "DELETE FROM budgets WHERE userName=:userName AND loanName=:loanName"
+          "DELETE FROM loans WHERE userName=:userName AND loanName=:loanName"
       );
       $sth->bindParam("loanName", $input['loanName']);
       $sth->bindParam("userName", $input['userName']);
@@ -105,7 +105,7 @@ $app->group('/api', function () use ($app) {
       $sth->bindParam("userName", $args['userName']); $sth->execute();
       $users = $sth->fetchObject();
           return $this->response->withJson($users);
-   });
+    });
   
     $app->post('/add-budget', function ($request, $response) {
       $input = $request->getParsedBody();
@@ -118,6 +118,7 @@ $app->group('/api', function () use ($app) {
       $sth->execute();
       return $this->response->withJson($input); 
      });
+
      $app->put('/edit-budget', function ($request, $response, $args) {
       $input = $request->getParsedBody();
       $sth = $this->db->prepare(
