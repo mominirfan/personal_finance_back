@@ -83,6 +83,15 @@ $app->group('/api', function () use ($app) {
     $sth->execute();
     return $this->response->withJson($input);
     });
+
+    $app->get('/get-budgets/[{userName}]', function ($request, $response, $args) {
+      $sth = $this->db->prepare(
+        "SELECT * FROM budgets WHERE userName=:userName"
+      );
+      $sth->bindParam("userName", $args['userName']); $sth->execute();
+      $users = $sth->fetchObject();
+          return $this->response->withJson($users);
+   });
   
   
     $app->post('/add-budget', function ($request, $response) {
