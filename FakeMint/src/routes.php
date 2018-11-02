@@ -37,7 +37,7 @@ $app->group('/api', function () use ($app) {
        );
        $sth->bindParam("userName", $args['userName']); $sth->execute();
        $users = $sth->fetchObject();
-           return $this->response->withJson($users);
+       return $this->response->withJson($users);
     });
 
     $app->put('/edit', function ($request, $response, $args) {
@@ -145,5 +145,16 @@ $app->group('/api', function () use ($app) {
 
     });
   
+    $app->post('/add-expense', function ($request, $response) {
+      $input = $request->getParsedBody();
+      $sql = "INSERT INTO expenses (userName, exType, amt, date) 
+      VALUES (:userName, :exType, :amt, now())";
+      $sth = $this->db->prepare($sql);
+      $sth->bindParam("userName", $input['userName']);
+      $sth->bindParam("exType", $input['exType']);
+      $sth->bindParam("amt", $input['amt']);
+      $sth->execute();
+      return $this->response->withJson($input); 
+    });
 });
 
