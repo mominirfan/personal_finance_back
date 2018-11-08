@@ -145,6 +145,16 @@ $app->group('/api', function () use ($app) {
 
     });
   
+
+    $app->get('/get-expenses/[{userName}]', function ($request, $response, $args) {
+      $sth = $this->db->prepare(
+        "SELECT * FROM expenses WHERE userName=:userName"
+      );
+      $sth->bindParam("userName", $args['userName']); $sth->execute();
+      $users = $sth->fetchObject();
+          return $this->response->withJson($users);
+    });
+
     $app->post('/add-expense', function ($request, $response) {
       $input = $request->getParsedBody();
       $sql = "INSERT INTO expenses (userName, exType, amt, date) 
@@ -155,6 +165,33 @@ $app->group('/api', function () use ($app) {
       $sth->bindParam("amt", $input['amt']);
       $sth->execute();
       return $this->response->withJson($input); 
+    });
+
+    
+    $app->put('/edit-expense', function ($request, $response, $args) {
+      $input = $request->getParsedBody();
+      $sth = $this->db->prepare(
+          "UPDATE expenses
+          SET exType=:exType, amt=:amt
+          WHERE userName=:userName"
+      );
+      $sth->bindParam("exType", $input['exType']);
+      $sth->bindParam("amt", $input['amt']);
+      $sth->bindParam("userName", $input['userName']);
+      $sth->execute();
+      return $this->response->withJson($input);
+    });  
+
+    $app->delete('/delete-expense', function($request, $response){
+      $input = $request->getParsedBody();
+      $sth = $this->db->prepare(
+          "DELETE FROM expenses WHERE userName=:userName AND exType=:exType"
+      );
+      $sth->bindParam("exType", $input['exType']);
+      $sth->bindParam("userName", $input['userName']);
+      $sth->execute();
+      return $this->response->withJson($input);
+
     });
 });
 
