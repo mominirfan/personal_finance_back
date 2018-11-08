@@ -118,7 +118,7 @@ $app->group('/api', function () use ($app) {
         "SELECT * FROM budgets WHERE userName=:userName"
       );
       $sth->bindParam("userName", $args['userName']); $sth->execute();
-      $users = $sth->fetchObject();
+      $users = $sth->fetchAll();
           return $this->response->withJson($users);
     });
   
@@ -166,7 +166,7 @@ $app->group('/api', function () use ($app) {
         "SELECT * FROM expenses WHERE userName=:userName"
       );
       $sth->bindParam("userName", $args['userName']); $sth->execute();
-      $users = $sth->fetchObject();
+      $users = $sth->fetchAll();
           return $this->response->withJson($users);
     });
 
