@@ -208,6 +208,19 @@ $app->group('/api', function () use ($app) {
       return $this->response->withJson($input);
 
     });
+    $app->get('/get-suggs/[{suggType}]', function ($request, $response, $args) {
+      $sth = $this->db->prepare(
+        "SELECT * FROM suggs WHERE suggType=:suggType"
+      );
+      $sth->bindParam("suggType", $args['suggtype']); $sth->execute();
+      $users = $sth->fetchAll();
+          return $this->response->withJson($users);
+    });
+
+
+
+
+
 });
 
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
