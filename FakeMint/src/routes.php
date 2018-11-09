@@ -2,6 +2,7 @@
 
 use Slim\Http\Request;
 use Slim\Http\Response;
+use \Firebase\JWT\JWT;
 
 
 
@@ -15,6 +16,33 @@ $app->add(function ($req, $res, $next) {
           ->withHeader('Access-Control-Allow-Origin', '*')
           ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
           ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+});
+
+$app->post('/login', function (Request $request, Response $response, array $args) {
+ 
+  $input = $request->getParsedBody();
+  $sql = "SELECT * FROM users WHERE userName= :userName";
+  $sth = $this->db->prepare($sql);
+  $sth->bindParam("userName", $input['userName']);
+  $sth->execute();
+  $user = $sth->fetchObject();
+
+  // verify email address.
+  if(!$user) {
+      return $this->response->withJson(['error' => true, 'message' => 'These credentials do not match our records.']);  
+  }
+
+  // verify password.
+  if (!password_verify($input['password'],$user->pwd)) {
+      return $this->response->withJson(['error' => true, 'message' => 'These credentials do not match our records.']);  
+  }
+
+  $settings = $this->get('settings'); // get settings array.
+  
+  $token = JWT::encode(['id' => $user->userName,], $settings['jwt']['secret'], "HS256");
+
+  return $this->response->withJson(['token' => $token]);
+
 });
 
 
