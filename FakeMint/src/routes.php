@@ -74,6 +74,26 @@ $app->group('/api', function () use ($app) {
       return $this->response->withJson($input);
     });
 
+    $app->get('/order-loans/[{userName}]', function ($request, $response, $args) {
+      $sth = $this->db->prepare(
+        "SELECT * FROM loans WHERE userName=:userName
+        AND DATEDIFF(day, NOW(), loans.paymentDate) > 0
+        ORDER BY DATEDIFF(day, NOW(), loans.paymentDate)"
+      );
+      $sth->bindParam("userName", $args['userName']); $sth->execute();
+      $users = $sth->fetchAll();
+          return $this->response->withJson($users);
+    });
+
+    $app->get('/get-loans/[{userName}]', function ($request, $response, $args) {
+      $sth = $this->db->prepare(
+        "SELECT * FROM loans WHERE userName=:userName"
+      );
+      $sth->bindParam("userName", $args['userName']); $sth->execute();
+      $users = $sth->fetchAll();
+          return $this->response->withJson($users);
+    });
+
     $app->post('/add-loan', function ($request, $response) {
       $input = $request->getParsedBody();
       $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest) 
