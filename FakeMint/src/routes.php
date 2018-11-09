@@ -35,8 +35,8 @@ $app->post('/login', function (Request $request, Response $response, array $args
   }
 
   // verify password.
-  if (!password_verify($input['pWord'],$user->pWord)) {
-      return $this->response->withJson(['error' => true, 'message' => 'Pword Error.']);  
+  if (!($input['pWord'] = $user->pWord)) {
+      return $this->response->withJson(['error' => true, 'message' => 'Pword Error.' , 'input' => $input['pWord'], 'check' => $user->pWord]);  
   }
   return $this->response->withJson(['userName' => $user->userName]);
 
