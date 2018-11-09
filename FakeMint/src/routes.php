@@ -31,12 +31,12 @@ $app->post('/login', function (Request $request, Response $response, array $args
 
   // verify email address.
   if(!$user) {
-      return $this->response->withJson(['error' => true, 'message' => 'User Error.']);  
+      return $this->response->withJson(['error' => true, 'message' => 'Username or Password is not valid.']);  
   }
 
   // verify password.
   if ($input['pWord'] != $user->pWord) {
-      return $this->response->withJson(['error' => true, 'message' => 'Pword Error.' , 'input' => $input['pWord'], 'check' => $user->pWord]);  
+      return $this->response->withJson(['error' => true, 'message' => 'Username or Password is not valid.');  
   }
   return $this->response->withJson(['userName' => $user->userName]);
 
