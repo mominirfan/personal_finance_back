@@ -8,12 +8,6 @@ return [
         'renderer' => [
             'template_path' => __DIR__ . '/../templates/',
         ],
-        // jwt settings
-        
-        
-        "jwt" => [
-            'secret' => 'supersecretkeyyoushouldnotcommittogithub'
-        ],
 
         // Monolog settings
         'logger' => [
