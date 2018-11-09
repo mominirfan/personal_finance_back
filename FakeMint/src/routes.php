@@ -21,11 +21,13 @@ $app->add(function ($req, $res, $next) {
 $app->post('/login', function (Request $request, Response $response, array $args) {
  
   $input = $request->getParsedBody();
-  $sql = "SELECT * FROM users WHERE userName= :userName";
+  $sql = "SELECT userName, pWord FROM users WHERE userName= :userName";
   $sth = $this->db->prepare($sql);
   $sth->bindParam("userName", $input['userName']);
   $sth->execute();
   $user = $sth->fetchObject();
+
+
 
   // verify email address.
   if(!$user) {
@@ -33,7 +35,7 @@ $app->post('/login', function (Request $request, Response $response, array $args
   }
 
   // verify password.
-  if (!password_verify($input['password'],$user->pWord)) {
+  if (!password_verify($input['pWord'],$user->pWord)) {
       return $this->response->withJson(['error' => true, 'message' => 'These credentials do not match our records.']);  
   }
   return $this->response->withJson(['userName' => $user->userName]);
