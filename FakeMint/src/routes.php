@@ -212,7 +212,7 @@ $app->group('/api', function () use ($app) {
       $sth = $this->db->prepare(
         "SELECT * FROM suggs WHERE suggType=:suggType"
       );
-      $sth->bindParam("suggType", $args['suggtype']); $sth->execute();
+      $sth->bindParam("suggType", $args['suggType']); $sth->execute();
       $users = $sth->fetchAll();
           return $this->response->withJson($users);
     });
