@@ -36,7 +36,7 @@ $app->post('/login', function (Request $request, Response $response, array $args
 
   // verify password.
   if ($input['pWord'] != $user->pWord) {
-      return $this->response->withJson(['error' => true, 'message' => 'Username or Password is not valid.');  
+      return $this->response->withJson(['error' => true, 'message' => 'Username or Password is not valid.']);  
   }
   return $this->response->withJson(['userName' => $user->userName]);
 
