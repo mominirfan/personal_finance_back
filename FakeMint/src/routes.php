@@ -21,7 +21,7 @@ $app->add(function ($req, $res, $next) {
 $app->post('/login', function (Request $request, Response $response, array $args) {
  
   $input = $request->getParsedBody();
-  $sql = "SELECT userName, pWord FROM users WHERE userName= :userName";
+  $sql = "SELECT * FROM users WHERE userName= :userName";
   $sth = $this->db->prepare($sql);
   $sth->bindParam("userName", $input['userName']);
   $sth->execute();
@@ -35,7 +35,7 @@ $app->post('/login', function (Request $request, Response $response, array $args
   }
 
   // verify password.
-  if (!($input['pWord'] = $user->pWord)) {
+  if ($input['pWord'] != $user->pWord) {
       return $this->response->withJson(['error' => true, 'message' => 'Pword Error.' , 'input' => $input['pWord'], 'check' => $user->pWord]);  
   }
   return $this->response->withJson(['userName' => $user->userName]);
