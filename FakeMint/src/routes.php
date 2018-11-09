@@ -94,15 +94,6 @@ $app->group('/api', function () use ($app) {
       $sth->execute();
       return $this->response->withJson($input);
     });
-    $app->get('/get-loans/[{userName}]', function ($request, $response, $args) {
-      $sth = $this->db->prepare(
-        "SELECT * FROM loans WHERE userName=:userName"
-
-      );
-      $sth->bindParam("userName", $args['userName']); $sth->execute();
-      $users = $sth->fetchAll();
-          return $this->response->withJson($users);
-    });
 
     $app->get('/order-loans/[{userName}]', function ($request, $response, $args) {
       $sth = $this->db->prepare(
