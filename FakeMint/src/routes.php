@@ -77,8 +77,8 @@ $app->group('/api', function () use ($app) {
     $app->get('/order-loans/[{userName}]', function ($request, $response, $args) {
       $sth = $this->db->prepare(
         "SELECT * FROM loans WHERE userName=:userName
-        AND DATEDIFF(loans.paymentDate, NOW()) > 0
-        ORDER BY DATEDIFF(loans.paymentDate, NOW())"
+        AND DATEDIFF(DATEFROMPARTS(YEAR(NOW()), MONTH(NOW()), loans.paymentDay), NOW()) > 0
+        ORDER BY DATEDIFF(STR_TO_DATE(CONCAT(YEAR(NOW()),'-',MONTH(NOW()),'-',loans.paymentDay)), '%Y, %m, %d'), NOW())"
       );
       $sth->bindParam("userName", $args['userName']); $sth->execute();
       $users = $sth->fetchAll();
