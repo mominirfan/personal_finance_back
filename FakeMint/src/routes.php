@@ -33,7 +33,7 @@ $app->post('/login', function (Request $request, Response $response, array $args
   }
 
   // verify password.
-  if (!password_verify($input['password'],$user->pwd)) {
+  if (!password_verify($input['password'],$user->pWord)) {
       return $this->response->withJson(['error' => true, 'message' => 'These credentials do not match our records.']);  
   }
 
