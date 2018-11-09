@@ -26,10 +26,8 @@ $app->get('/[{name}]', function (Request $request, Response $response, array $ar
 
     // Render index view
     return $this->renderer->render($response, 'index.phtml', $args);
-
-
-
 });
+
 $app->group('/api', function () use ($app) {
   
     $app->post('/registration', function ($request, $response) {
@@ -73,6 +71,15 @@ $app->group('/api', function () use ($app) {
       $sth->execute();
       return $this->response->withJson($input);
     });
+    $app->get('/get-loans/[{userName}]', function ($request, $response, $args) {
+      $sth = $this->db->prepare(
+        "SELECT * FROM loans WHERE userName=:userName"
+
+      );
+      $sth->bindParam("userName", $args['userName']); $sth->execute();
+      $users = $sth->fetchAll();
+          return $this->response->withJson($users);
+    });
 
     $app->post('/add-loan', function ($request, $response) {
       $input = $request->getParsedBody();
@@ -86,6 +93,8 @@ $app->group('/api', function () use ($app) {
       $sth->execute();
       return $this->response->withJson($input); 
     });
+
+
 
     $app->put('/edit-loan', function ($request, $response, $args) {
       $input = $request->getParsedBody();
@@ -169,6 +178,8 @@ $app->group('/api', function () use ($app) {
       $users = $sth->fetchAll();
           return $this->response->withJson($users);
     });
+    
+
 
     $app->post('/add-expense', function ($request, $response) {
       $input = $request->getParsedBody();
