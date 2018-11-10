@@ -18,6 +18,7 @@ $app->add(function ($req, $res, $next) {
           ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
 });
 
+
 $app->post('/login', function (Request $request, Response $response, array $args) {
  
   $input = $request->getParsedBody();
@@ -264,7 +265,15 @@ $app->group('/api', function () use ($app) {
           return $this->response->withJson($users);
     });
 
-
+    $app->get('/get-total-spending/[{userName}]/{exType}]', function ($request, $response, $args) {
+      $sth = $this->db->prepare(
+        "SELECT SUM(amt) FROM expenses WHERE userName=:userName AND exType=:exType"
+      );
+      $sth->bindParam("exType", $args['exType']); $sth->execute();
+      $sth->bindParam("userName", $args['userName']); $sth->execute();
+      $res = $sth->fetchObject();
+          return $this->response->withJson($res);
+    });
 
 
 
