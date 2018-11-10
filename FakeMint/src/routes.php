@@ -83,11 +83,9 @@ $app->group('/api', function () use ($app) {
       $input = $request->getParsedBody();
       $sth = $this->db->prepare(
           "UPDATE users
-          SET lastName=:lastName, firstName=:firstName, email=:email, 
-          userName=:userName, pWord=:pWord, income=:income
-          WHERE userID=:userID"
+          SET lastName=:lastName, firstName=:firstName, email=:email, pWord=:pWord, income=:income
+          WHERE userName=:userName"
       );
-      $sth->bindParam("userID", $input['userID']);
       $sth->bindParam("lastName", $input['lastName']);
       $sth->bindParam("firstName", $input['firstName']);
       $sth->bindParam("email", $input['email']);
@@ -96,6 +94,19 @@ $app->group('/api', function () use ($app) {
       $sth->bindParam("income", $input['income']);
       $sth->execute();
       return $this->response->withJson($input);
+    });
+
+    $app->put('/edit_bal', function ($request, $response, $args) {
+      $input = $request->getParsedBody();
+      $sth = $this->db->prepare(
+          "UPDATE users
+          SET bal=:bal
+          WHERE userName=:userName"
+      );
+      $sth->bindParam("userName", $input['userName']);
+      $sth->bindParam("bal", $input['bal']);
+      return $this->response->withJson($input);
+
     });
 
     $app->get('/order-loans/[{userName}]', function ($request, $response, $args) {
