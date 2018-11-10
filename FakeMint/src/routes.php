@@ -270,7 +270,7 @@ $app->group('/api', function () use ($app) {
         "SELECT exType , SUM(amt) FROM expenses WHERE userName=:userName GROUP BY exType"
       );
       $sth->bindParam("userName", $args['userName']); $sth->execute();
-      $res = $sth->fetchObject();
+      $res = $sth->fetchAll();
           return $this->response->withJson($res);
     });
 
