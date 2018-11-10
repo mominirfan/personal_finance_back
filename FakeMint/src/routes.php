@@ -209,7 +209,7 @@ $app->group('/api', function () use ($app) {
 
     $app->get('/get-expenses/[{userName}]', function ($request, $response, $args) {
       $sth = $this->db->prepare(
-        "SELECT * FROM expenses WHERE userName=:userName ORDER BY date ASC"
+        "SELECT * FROM expenses WHERE userName=:userName ORDER BY date DESC"
       );
       $sth->bindParam("userName", $args['userName']); $sth->execute();
       $users = $sth->fetchAll();
