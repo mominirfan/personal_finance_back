@@ -269,7 +269,6 @@ $app->group('/api', function () use ($app) {
       $sth = $this->db->prepare(
         "SELECT exType , SUM(amt) FROM expenses WHERE userName=:userName GROUP BY exType"
       );
-      $sth->bindParam("exType", $args['exType']); $sth->execute();
       $sth->bindParam("userName", $args['userName']); $sth->execute();
       $res = $sth->fetchObject();
           return $this->response->withJson($res);
