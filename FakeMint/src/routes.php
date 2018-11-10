@@ -265,9 +265,9 @@ $app->group('/api', function () use ($app) {
           return $this->response->withJson($users);
     });
 
-    $app->get('/get-total-spending/[{userName}]/{exType}]', function ($request, $response, $args) {
+    $app->get('/get-total-spending/[{userName}]', function ($request, $response, $args) {
       $sth = $this->db->prepare(
-        "SELECT SUM(amt) FROM expenses WHERE userName=:userName AND exType=:exType"
+        "SELECT exType , SUM(amt) FROM expenses WHERE userName=:userName GROUP BY exType"
       );
       $sth->bindParam("exType", $args['exType']); $sth->execute();
       $sth->bindParam("userName", $args['userName']); $sth->execute();
