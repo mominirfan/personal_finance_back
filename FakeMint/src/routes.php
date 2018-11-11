@@ -105,6 +105,7 @@ $app->group('/api', function () use ($app) {
       );
       $sth->bindParam("userName", $input['userName']);
       $sth->bindParam("bal", $input['bal']);
+      $sth->execute();
       return $this->response->withJson($input);
 
     });
@@ -115,7 +116,8 @@ $app->group('/api', function () use ($app) {
         AND DATEDIFF(CAST(CONCAT(YEAR(NOW()),'-',MONTH(NOW()),'-',loans.paymentDay) as DATE), NOW()) > 0
         ORDER BY DATEDIFF(CAST(CONCAT(YEAR(NOW()),'-',MONTH(NOW()),'-',loans.paymentDay) as DATE), NOW())"
       );
-      $sth->bindParam("userName", $args['userName']); $sth->execute();
+      $sth->bindParam("userName", $args['userName']); 
+      $sth->execute();
       $users = $sth->fetchAll();
           return $this->response->withJson($users);
     });
@@ -129,10 +131,24 @@ $app->group('/api', function () use ($app) {
           return $this->response->withJson($users);
     });
 
+    $app->put('/update-loan', function ($request, $response, $args) {
+      $input = $request->getParsedBody();
+      $sth = $this->db->prepare(
+          "UPDATE loans
+          SET paid=:paid
+          WHERE userName=:userName AND loanName=:loanName"
+      );
+      $sth->bindParam("paid", $input['paid']);
+      $sth->bindParam("loanName", $input['loanName']);
+      $sth->bindParam("userName", $input['userName']);
+      $sth->execute();
+      return $this->response->withJson($input);
+    });
+
     $app->post('/add-loan', function ($request, $response) {
       $input = $request->getParsedBody();
-      $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest) 
-      VALUES (:userName, :loanName, :loanAmount, :interest)";
+      $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest, paid) 
+      VALUES (:userName, :loanName, :loanAmount, :interest, 0)";
       $sth = $this->db->prepare($sql);
       $sth->bindParam("userName", $input['userName']);
       $sth->bindParam("loanName", $input['loanName']);
@@ -141,8 +157,6 @@ $app->group('/api', function () use ($app) {
       $sth->execute();
       return $this->response->withJson($input); 
     });
-
-
 
     $app->put('/edit-loan', function ($request, $response, $args) {
       $input = $request->getParsedBody();
