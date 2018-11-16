@@ -32,12 +32,12 @@ $app->post('/login', function (Request $request, Response $response, array $args
 
   // verify email address.
   if(!$user) {
-      return $this->response->withJson(500);  
+      return $this->response->withJson(['error' => true, 'message' => 'Username or Password is not valid.'], 201);  
   }
 
   // verify password.
   if ($input['pWord'] != $user->pWord) {
-      return $this->response->withStatus(500);  
+      return $this->response->withJson(['error' => true, 'message' => 'Username or Password is not valid.'], 201);  
   }
   return $this->response->withJson(['userName' => $user->userName]);
 
@@ -309,6 +309,7 @@ $app->group('/api', function () use ($app) {
           SET bal= bal + change
           WHERE userName=:userName"
       );
+      $sth->bindParam("change", $input['change']);
       $sth->bindParam("userName", $input['userName']);
       $sth->execute();
       return $this->response->withJson($input);
@@ -321,6 +322,7 @@ $app->group('/api', function () use ($app) {
           SET bal= bal - change
           WHERE userName=:userName"
       );
+      $sth->bindParam("change", $input['change']);
       $sth->bindParam("userName", $input['userName']);
       $sth->execute();
       return $this->response->withJson($input);
