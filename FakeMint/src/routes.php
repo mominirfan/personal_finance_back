@@ -305,9 +305,10 @@ $app->group('/api', function () use ($app) {
 
     $app->put('/increment-bal', function ($request, $response, $args) {
       $input = $request->getParsedBody();
+      $change = $input['change'];
       $sth = $this->db->prepare(
           "UPDATE users
-          SET bal= bal + change=:change
+          SET bal= bal + $change
           WHERE userName=:userName"
       );
       $sth->bindParam("change", $input['change']);
@@ -318,12 +319,12 @@ $app->group('/api', function () use ($app) {
 
     $app->put('/decrement-bal', function ($request, $response, $args) {
       $input = $request->getParsedBody();
+      $change = $input['change'];
       $sth = $this->db->prepare(
           "UPDATE users
-          SET bal= bal - change
+          SET bal= bal - $change
           WHERE userName=:userName"
       );
-      $sth->bindParam("change", $input['change']);
       $sth->bindParam("userName", $input['userName']);
       $sth->execute();
       return $this->response->withJson($input);
