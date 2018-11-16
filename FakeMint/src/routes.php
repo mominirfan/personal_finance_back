@@ -303,7 +303,7 @@ $app->group('/api', function () use ($app) {
           return $this->response->withJson($res);
     });
 
-    $app->put('increment-bal', function ($request, $response, $args) {
+    $app->put('/increment-bal', function ($request, $response, $args) {
       $input = $request->getParsedBody();
       $sth = $this->db->prepare(
           "UPDATE users
@@ -316,7 +316,7 @@ $app->group('/api', function () use ($app) {
       return $this->response->withJson($input);
     });
 
-    $app->put('decrement-bal', function ($request, $response, $args) {
+    $app->put('/decrement-bal', function ($request, $response, $args) {
       $input = $request->getParsedBody();
       $sth = $this->db->prepare(
           "UPDATE users
