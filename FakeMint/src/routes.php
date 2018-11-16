@@ -307,7 +307,7 @@ $app->group('/api', function () use ($app) {
       $input = $request->getParsedBody();
       $sth = $this->db->prepare(
           "UPDATE users
-          SET bal= bal + change
+          SET bal= bal + change=:change
           WHERE userName=:userName"
       );
       $sth->bindParam("change", $input['change']);
