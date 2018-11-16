@@ -58,7 +58,8 @@ $app->group('/api', function () use ($app) {
   
     $app->post('/registration', function ($request, $response) {
       $input = $request->getParsedBody();
-      $sql = "INSERT INTO users (userName, pWord, lastName, firstName, email, income) VALUES (:userName, :pWord, :lastName, :firstName, :email, :income)";
+      $sql = "INSERT INTO users (userName, pWord, lastName, firstName, email, income, bal) 
+      VALUES (:userName, :pWord, :lastName, :firstName, :email, :income, :bal)";
       $sth = $this->db->prepare($sql);
       $sth->bindParam("userName", $input['userName']);
       $sth->bindParam("pWord", $input['pWord']);
@@ -66,6 +67,7 @@ $app->group('/api', function () use ($app) {
       $sth->bindParam("firstName", $input['firstName']);
       $sth->bindParam("email", $input['email']);
       $sth->bindParam("income", $input['income']);
+      $sth->bindParam("bal", $input['bal']);
       $sth->execute();
       return $this->response->withJson($input); 
     });
@@ -300,8 +302,29 @@ $app->group('/api', function () use ($app) {
           return $this->response->withJson($res);
     });
 
+    $app->put('increment-bal', function ($request, $response, $args) {
+      $input = $request->getParsedBody();
+      $sth = $this->db->prepare(
+          "UPDATE users
+          SET bal= bal + change
+          WHERE userName=:userName"
+      );
+      $sth->bindParam("userName", $input['userName']);
+      $sth->execute();
+      return $this->response->withJson($input);
+    });
 
-
+    $app->put('decrement-bal', function ($request, $response, $args) {
+      $input = $request->getParsedBody();
+      $sth = $this->db->prepare(
+          "UPDATE users
+          SET bal= bal - change
+          WHERE userName=:userName"
+      );
+      $sth->bindParam("userName", $input['userName']);
+      $sth->execute();
+      return $this->response->withJson($input);
+    });
 });
 
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
