@@ -311,7 +311,6 @@ $app->group('/api', function () use ($app) {
           SET bal= (bal + $change)
           WHERE userName=:userName"
       );
-      $sth->bindParam("change", $input['change']);
       $sth->bindParam("userName", $input['userName']);
       $sth->execute();
       return $this->response->withJson($input);
