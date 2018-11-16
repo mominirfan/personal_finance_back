@@ -32,12 +32,12 @@ $app->post('/login', function (Request $request, Response $response, array $args
 
   // verify email address.
   if(!$user) {
-      return $this->response->withJson(['error' => true, 'message' => 'Username or Password is not valid.'], 201);  
+      return $this->response->withJson(['error' => true, 'message' => 'Username or Password is not valid.']);  
   }
 
   // verify password.
   if ($input['pWord'] != $user->pWord) {
-      return $this->response->withJson(['error' => true, 'message' => 'Username or Password is not valid.'], 201);  
+      return $this->response->withJson(['error' => true, 'message' => 'Username or Password is not valid.']);  
   }
   return $this->response->withJson(['userName' => $user->userName]);
 
@@ -149,12 +149,13 @@ $app->group('/api', function () use ($app) {
 
     $app->post('/add-loan', function ($request, $response) {
       $input = $request->getParsedBody();
-      $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest, paymentDay, paid) 
-      VALUES (:userName, :loanName, :loanAmount, :interest, :paymentDay, 0)";
+      $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest, paymentDay, loanPayment, paid) 
+      VALUES (:userName, :loanName, :loanAmount, :interest, :paymentDay, :loanPayment, 0)";
       $sth = $this->db->prepare($sql);
       $sth->bindParam("userName", $input['userName']);
       $sth->bindParam("loanName", $input['loanName']);
       $sth->bindParam("loanAmount", $input['loanAmount']);
+      $sth->bindParam("loanPayment", $input['loanPayment']);
       $sth->bindParam("interest", $input['interest']);
       $sth->bindParam("paymentDay", $input['paymentDay']);
       $sth->execute();
