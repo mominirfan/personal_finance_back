@@ -308,7 +308,7 @@ $app->group('/api', function () use ($app) {
       $change = $input['change'];
       $sth = $this->db->prepare(
           "UPDATE users
-          SET bal= bal + $change
+          SET bal= (bal + $change)
           WHERE userName=:userName"
       );
       $sth->bindParam("change", $input['change']);
@@ -322,7 +322,7 @@ $app->group('/api', function () use ($app) {
       $change = $input['change'];
       $sth = $this->db->prepare(
           "UPDATE users
-          SET bal= bal - $change
+          SET bal= (bal - $change)
           WHERE userName=:userName"
       );
       $sth->bindParam("userName", $input['userName']);
