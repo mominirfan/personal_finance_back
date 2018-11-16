@@ -32,7 +32,7 @@ $app->post('/login', function (Request $request, Response $response, array $args
 
   // verify email address.
   if(!$user) {
-      return $this->response->withJson(['error' => true, 'message' => 'Username or Password is not valid.']);  
+      return $this->response->->withJson(['error' => true, 'message' => 'Username or Password is not valid.']);  
   }
 
   // verify password.
