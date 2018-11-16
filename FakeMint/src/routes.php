@@ -147,13 +147,14 @@ $app->group('/api', function () use ($app) {
 
     $app->post('/add-loan', function ($request, $response) {
       $input = $request->getParsedBody();
-      $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest, paid) 
-      VALUES (:userName, :loanName, :loanAmount, :interest, 0)";
+      $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest, paymentDay, paid) 
+      VALUES (:userName, :loanName, :loanAmount, :interest, :paymentDay, 0)";
       $sth = $this->db->prepare($sql);
       $sth->bindParam("userName", $input['userName']);
       $sth->bindParam("loanName", $input['loanName']);
       $sth->bindParam("loanAmount", $input['loanAmount']);
       $sth->bindParam("interest", $input['interest']);
+      $sth->bindParam("paymentDay", $input['paymentDay']);
       $sth->execute();
       return $this->response->withJson($input); 
     });
