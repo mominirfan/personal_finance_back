@@ -180,7 +180,8 @@ $app->group('/api', function () use ($app) {
     $app->delete('/delete-loan', function($request, $response){
       $input = $request->getParsedBody();
       $sth = $this->db->prepare(
-          "DELETE FROM loans WHERE userName=:userName AND loanName=:loanName"
+          "DELETE FROM loans WHERE userName=:userName AND loanName=:loanName
+          UPDATE budgets SET amt = amt - :loanPayment WHERE budgetType = 'Loans' AND userName=:userName"
       );
       $sth->bindParam("loanName", $input['loanName']);
       $sth->bindParam("userName", $input['userName']);
