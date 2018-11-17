@@ -167,7 +167,7 @@ $app->group('/api', function () use ($app) {
       $input = $request->getParsedBody();
       $sth = $this->db->prepare(
           "UPDATE loans
-          SET loanName=:loanName, loanAmount=:loanAmount
+          SET loanName=:loanName, loanAmount=:loanAmount, interest=:interest, paymentDay=:paymentDay
           WHERE userName=:userName"
       );
       $sth->bindParam("loanName", $input['loanName']);
