@@ -149,8 +149,8 @@ $app->group('/api', function () use ($app) {
 
     $app->post('/add-loan', function ($request, $response) {
       $input = $request->getParsedBody();
-      $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest, paymentDay, loanPayment, paid) 
-      VALUES (:userName, :loanName, :loanAmount, :interest, :paymentDay, :loanPayment, 0);
+      $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest, paymentDay, loanPayment, paid, loanDescription) 
+      VALUES (:userName, :loanName, :loanAmount, :interest, :paymentDay, :loanPayment, 0, :loanDescription);
       UPDATE budgets SET amt = amt + :loanPayment WHERE budgetType = 'Loans' AND userName=:userName";
       $sth = $this->db->prepare($sql);
       $sth->bindParam("userName", $input['userName']);
