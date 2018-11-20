@@ -161,6 +161,8 @@ $app->group('/api', function () use ($app) {
       $sth->bindParam("loanPayment", $input['loanPayment']);
       $sth->bindParam("interest", $input['interest']);
       $sth->bindParam("paymentDay", $input['paymentDay']);
+      $sth->bindParam("loanBalance", $input['loanAmount']);
+      $sth->bindParam("loanDescription", $input['loanDescription']);
       $sth->execute();
       return $this->response->withJson($input); 
     });
