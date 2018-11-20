@@ -171,11 +171,16 @@ $app->group('/api', function () use ($app) {
       $input = $request->getParsedBody();
       $sth = $this->db->prepare(
           "UPDATE loans
-          SET loanName=:loanName, loanAmount=:loanAmount, interest=:interest, paymentDay=:paymentDay
+          SET loanName=:loanName, loanAmount=:loanAmount, interest=:interest, paymentDay=:paymentDay, 
+          loanDescription=:loanDescription, loanPayment=:loanPayment
           WHERE userName=:userName"
       );
       $sth->bindParam("loanName", $input['loanName']);
       $sth->bindParam("loanAmount", $input['loanAmount']);
+      $sth->bindParam("loanPayment", $input['loanPayment']);
+      $sth->bindParam("loanDescription", $input['loanDescription']);
+      $sth->bindParam("interest", $input['interest']);
+      $sth->bindParam("paymentDay", $input['paymentDay']);
       $sth->bindParam("userName", $input['userName']);
       $sth->execute();
       return $this->response->withJson($input);
