@@ -230,7 +230,7 @@ $app->group('/api', function () use ($app) {
       $input = $request->getParsedBody();
       $sth = $this->db->prepare(
           "UPDATE budgets
-          SET budgetType=:budgetType, amt=:amt
+          SET amt=:amt
           WHERE userName=:userName AND budgetType = budgetType"
       );
       $sth->bindParam("budgetType", $input['budgetType']);
