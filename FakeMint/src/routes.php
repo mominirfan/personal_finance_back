@@ -142,6 +142,7 @@ $app->group('/api', function () use ($app) {
       );
       $sth->bindParam("paid", $input['paid']);
       $sth->bindParam("loanName", $input['loanName']);
+      $sth->bindParam("loanDescription", $input['loanDescription']);
       $sth->bindParam("userName", $input['userName']);
       $sth->execute();
       return $this->response->withJson($input);
