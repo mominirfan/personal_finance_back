@@ -192,10 +192,13 @@ $app->group('/api', function () use ($app) {
     $app->delete('/delete-loan', function($request, $response){
       $input = $request->getParsedBody();
       $sth = $this->db->prepare(
-          "DELETE FROM loans WHERE userName=:userName AND loanName=:loanName
-          UPDATE budgets SET amt = amt - :loanPayment WHERE budgetType = 'Loans' AND userName=:userName"
+          "DELETE FROM loans WHERE userName=:userName AND loanName=:loanName 
+          AND loanDescription=:loanDescription
+          UPDATE budgets SET amt = amt - :loanPayment 
+          WHERE budgetType = 'Loans' AND userName=:userName"
       );
       $sth->bindParam("loanName", $input['loanName']);
+      $sth->bindParam("loanDescription", $input['loanDescription']);
       $sth->bindParam("userName", $input['userName']);
       $sth->execute();
       return $this->response->withJson($input);
