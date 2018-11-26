@@ -313,7 +313,7 @@ $app->group('/api', function () use ($app) {
 
     $app->get('/get-total-spending/[{userName}]', function ($request, $response, $args) {
       $sth = $this->db->prepare(
-        "SELECT exType , SUM(amt) FROM expenses WHERE userName=:userName GROUP BY exType"
+        "SELECT exType , SUM(amt) as amt FROM expenses WHERE userName=:userName GROUP BY exType"
       );
       $sth->bindParam("userName", $args['userName']); $sth->execute();
       $res = $sth->fetchAll();
