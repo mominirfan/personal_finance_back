@@ -110,7 +110,7 @@ $app->group('/api', function () use ($app) {
       $sth->execute();
       return $this->response->withJson($input);
     });
-    $app->put('/edit-pass', function ($request, $response, $args) {
+    $app->put('/edit-inc', function ($request, $response, $args) {
       $input = $request->getParsedBody();
       $sth = $this->db->prepare(
           "UPDATE users
