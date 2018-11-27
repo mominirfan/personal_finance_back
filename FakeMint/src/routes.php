@@ -369,7 +369,7 @@ $app->group('/api', function () use ($app) {
       $quer->execute();
       $suggs = $quer->fetchAll();
 
-          return $this->response->withJson($types);
+          return $this->response->withJson($suggs);
     });
 
 });
