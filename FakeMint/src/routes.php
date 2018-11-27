@@ -345,6 +345,29 @@ $app->group('/api', function () use ($app) {
       $sth->execute();
       return $this->response->withJson($input);
     });
+    $app->get('/get-sugg/[{userName}]', function ($request, $response, $args) {
+      $sth = $this->db->prepare(
+        "SELECT exType, SUM(amt) as amt
+        FROM expenses
+        WHERE userName=:userName
+        GROUP BY exType
+        ORDER BY amt DESC
+        LIMIT 2"
+      );
+      $sth->bindParam("userName", $args['userName']); $sth->execute();
+      $types = $sth->fetchAll();
+      $array = json_decode($types,true);
+      $firstST = var_dump($array[0]['exType']);
+      $secST = var_dump($array[0]['exType']);
+
+      $quer = $this->db->prepare(
+        "SELECT * FROM suggs WHERE suggType = $firstST OR suggType = $secST"
+      );
+      $suggs = $quer->fetchAll();
+
+          return $this->response->withJson($suggs);
+    });
+
 });
 
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
