@@ -359,7 +359,7 @@ $app->group('/api', function () use ($app) {
       $sth->execute();
       $types = $sth->fetchAll();
       $jsonTypes = json_encode($types);
-      $array = json_decode($json_Types,true);
+      $array = json_decode($jsonTypes,true);
       $firstST = var_dump($array[0]['exType']);
       $secST = var_dump($array[1]['exType']);
       
