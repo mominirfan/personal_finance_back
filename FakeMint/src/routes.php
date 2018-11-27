@@ -99,21 +99,8 @@ $app->group('/api', function () use ($app) {
       return $this->response->withJson($input);
     });
 
-    $app->put('/edit_pass', function ($request, $response, $args){
-      input = $request->getParsedBody();
-      $sth = this->db->prepare(
-        "UPDATE users
-        set pWord=:pWord
-        WHERE userName:userName"
-      );
-      $sth->bindParam("pWord", $input['pWord']);
-      $sth->bindParam("userName", $input['userName']);
-      $sth->execute();
-      return $this->response->withJson($input);
-    });
-
     $app->put('/edit_inc', function ($request, $response, $args){
-      input = $request->getParsedBody();
+      $input = $request->getParsedBody();
       $sth = this->db->prepare(
         "UPDATE users
         set income=:income
