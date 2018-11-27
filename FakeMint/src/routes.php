@@ -354,16 +354,18 @@ $app->group('/api', function () use ($app) {
         ORDER BY amt DESC
         LIMIT 2"
       );
-      $sth->bindParam("userName", $args['userName']); $sth->execute();
+      $sth->bindParam("userName", $args['userName']);
+      $sth->execute();
       $types = $sth->fetchAll();
-      #$array = json_decode($types);
-      #$firstST = var_dump($array[0]['exType']);
-      #$secST = var_dump($array[1]['exType']);
+      $array = json_decode($types);
+      $firstST = var_dump($array[0]['exType']);
+      $secST = var_dump($array[1]['exType']);
 
-      #$quer = $this->db->prepare(
-      #  "SELECT * FROM suggs WHERE suggType = $firstST OR suggType = $secST"
-      #);
-      #$suggs = $quer->fetchAll();
+      $quer = $this->db->prepare(
+        "SELECT * FROM suggs WHERE suggType = $firstST OR suggType = $secST"
+      );
+      $suggs->execute();
+      $suggs = $quer->fetchAll();
 
           return $this->response->withJson($types);
     });
