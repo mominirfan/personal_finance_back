@@ -3,6 +3,7 @@
 use Slim\Http\Request;
 use Slim\Http\Response;
 use \Firebase\JWT\JWT;
+use function Monolog\Handler\error_log;
 
 
 
@@ -360,6 +361,9 @@ $app->group('/api', function () use ($app) {
       $array = json_decode($types);
       $firstST = var_dump($array[0]['exType']);
       $secST = var_dump($array[1]['exType']);
+
+      error_log($firstST,0);
+      error_log($secST,0);
 
       $quer = $this->db->prepare(
         "SELECT * FROM suggs WHERE suggType=:firstST OR suggType=:secST"
