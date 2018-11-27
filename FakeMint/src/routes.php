@@ -362,8 +362,8 @@ $app->group('/api', function () use ($app) {
       $firstST = var_dump($array[0]['exType']);
       $secST = var_dump($array[1]['exType']);
 
-      error_log($firstST,0);
-      error_log($secST,0);
+      #error_log($firstST,0);
+      #error_log($secST,0);
 
       $quer = $this->db->prepare(
         "SELECT * FROM suggs WHERE suggType=:firstST OR suggType=:secST"
