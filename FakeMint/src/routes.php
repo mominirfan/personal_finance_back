@@ -358,10 +358,11 @@ $app->group('/api', function () use ($app) {
       $sth->bindParam("userName", $args['userName']);
       $sth->execute();
       $types = $sth->fetchAll();
-      $array = json_decode($types,true);
+      $jsonTypes = json_encode($types);
+      $array = json_decode($json_Types,true);
       $firstST = var_dump($array[0]['exType']);
       $secST = var_dump($array[1]['exType']);
-
+      
       #error_log($firstST,0);
       #error_log($secST,0);
 
