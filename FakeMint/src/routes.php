@@ -364,7 +364,7 @@ $app->group('/api', function () use ($app) {
       $quer = $this->db->prepare(
         "SELECT * FROM suggs WHERE suggType = $firstST OR suggType = $secST"
       );
-      $suggs->execute();
+      $quer->execute();
       $suggs = $quer->fetchAll();
 
           return $this->response->withJson($types);
