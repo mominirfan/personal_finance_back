@@ -99,6 +99,32 @@ $app->group('/api', function () use ($app) {
       return $this->response->withJson($input);
     });
 
+    $app->put('/edit_pass', function ($request, $response, $args){
+      input = request->getParsedBody();
+      $sth = this->db->prepare(
+        "UPDATE users
+        set pWord=:pWord
+        WHERE userName:userName"
+      );
+      $sth->bindParam("pWord", $input['pWord']);
+      $sth->bindParam("userName", $input['userName']);
+      $sth->execute();
+      return $this->response->withJson($input);
+    });
+
+    $app->put('/edit_inc', function ($request, $response, $args){
+      input = request->getParsedBody();
+      $sth = this->db->prepare(
+        "UPDATE users
+        set income=:income
+        WHERE userName:userName"
+      );
+      $sth->bindParam("income", $input['income']);
+      $sth->bindParam("userName", $input['userName']);
+      $sth->execute();
+      return $this->response->withJson($input);
+    });
+
     $app->put('/edit_bal', function ($request, $response, $args) {
       $input = $request->getParsedBody();
       $sth = $this->db->prepare(
@@ -358,17 +384,10 @@ $app->group('/api', function () use ($app) {
       $sth->bindParam("userName", $args['userName']);
       $sth->execute();
       $types = $sth->fetchAll();
-      #echo("First Thing");
-      #echo($types);
       $jsonTypes = json_encode($types);
       $array = json_decode($jsonTypes,true);
       $firstST = $array[0]['exType'];
       $secST = $array[1]['exType'];
-      #echo('SECOND THING');
-      #echo($array[0]['exType']);
-      #error_log($firstST,0);
-      #error_log($secST,0);
-
       $quer = $this->db->prepare(
         "SELECT * FROM suggs WHERE suggType=:firstST OR suggType=:secST"
       );
