@@ -364,8 +364,8 @@ $app->group('/api', function () use ($app) {
       $quer = $this->db->prepare(
         "SELECT * FROM suggs WHERE suggType = firstST OR $secST"
       );
-      $quer = bindParam("firstST", $firstST);
-      $quer = bindParam("secST", $secST);
+      $quer->bindParam("firstST", $firstST);
+      $quer->bindParam("secST", $secST);
       $quer->execute();
       $suggs = $quer->fetchAll();
 
