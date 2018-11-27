@@ -358,7 +358,7 @@ $app->group('/api', function () use ($app) {
       $sth->bindParam("userName", $args['userName']);
       $sth->execute();
       $types = $sth->fetchAll();
-      $array = json_decode($types,true);
+      $array = json_decode($types[0]);
       $firstST = var_dump($array[0]['exType']);
       $secST = var_dump($array[1]['exType']);
 
