@@ -98,19 +98,30 @@ $app->group('/api', function () use ($app) {
       $sth->execute();
       return $this->response->withJson($input);
     });
-
-    $app->put('/edit_inc', function ($request, $response, $args){
+    $app->put('/edit-pass', function ($request, $response, $args) {
       $input = $request->getParsedBody();
-      $sth = this->db->prepare(
-        "UPDATE users
-        set income=:income
-        WHERE userName:userName"
+      $sth = $this->db->prepare(
+          "UPDATE users
+          SET  pWord=:pWord
+          WHERE userName=:userName"
       );
-      $sth->bindParam("income", $input['income']);
       $sth->bindParam("userName", $input['userName']);
+      $sth->bindParam("pWord", $input['pWord']);
       $sth->execute();
       return $this->response->withJson($input);
     });
+    $app->put('/edit-pass', function ($request, $response, $args) {
+      $input = $request->getParsedBody();
+      $sth = $this->db->prepare(
+          "UPDATE users
+          SET  income=:income
+          WHERE income=:income"
+      );
+      $sth->bindParam("userName", $input['userName']);
+      $sth->bindParam("income", $input['income']);
+      $sth->execute();
+      return $this->response->withJson($input);
+    });    
 
     $app->put('/edit_bal', function ($request, $response, $args) {
       $input = $request->getParsedBody();
