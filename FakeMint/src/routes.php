@@ -115,7 +115,7 @@ $app->group('/api', function () use ($app) {
       $sth = $this->db->prepare(
           "UPDATE users
           SET  income=:income
-          WHERE income=:income"
+          WHERE userName=:userName"
       );
       $sth->bindParam("userName", $input['userName']);
       $sth->bindParam("income", $input['income']);
