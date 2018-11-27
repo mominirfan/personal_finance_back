@@ -100,7 +100,7 @@ $app->group('/api', function () use ($app) {
     });
 
     $app->put('/edit_pass', function ($request, $response, $args){
-      input = request->getParsedBody();
+      input = $request->getParsedBody();
       $sth = this->db->prepare(
         "UPDATE users
         set pWord=:pWord
@@ -113,7 +113,7 @@ $app->group('/api', function () use ($app) {
     });
 
     $app->put('/edit_inc', function ($request, $response, $args){
-      input = request->getParsedBody();
+      input = $request->getParsedBody();
       $sth = this->db->prepare(
         "UPDATE users
         set income=:income
