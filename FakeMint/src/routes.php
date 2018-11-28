@@ -77,7 +77,7 @@ $app->group('/api', function () use ($app) {
       VALUES (:userName, :budgetType, now(), 0)";
       
       $budget_sth = $this->db->prepare($budget_sql);
-      $types = array("Savings","Ent.","Util.","Food","Car","House");
+      $types = array("Savings","Ent.","Util.","Food","Car","House","Misc.");
       $budget_sth->bindParam("userName", $input['userName']);
       foreach($types as $type){
         $budget_sth->bindParam("budgetType", $type); 
@@ -88,7 +88,7 @@ $app->group('/api', function () use ($app) {
       VALUES (:userName, :exType, now(), 0)";
       
       $ex_sth = $this->db->prepare($ex_sql);
-      $extypes = array("Ent.","Util.","Food","Car","House");
+      $extypes = array("Ent.","Util.","Food","Car","House","Misc.");
       $ex_sth->bindParam("userName", $input['userName']);
       foreach($extypes as $extype){
         $ex_sth->bindParam("exType", $extype); 
