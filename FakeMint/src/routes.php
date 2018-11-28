@@ -84,7 +84,7 @@ $app->group('/api', function () use ($app) {
         $budget_sth->execute();
       }
       #creates expenses init to 0
-      $ex_sql = "INSERT INTO expenses (userName, exType, active_date, amt) 
+      $ex_sql = "INSERT INTO expenses (userName, exType, date, amt) 
       VALUES (:userName, :exType, now(), 0)";
       
       $ex_sth = $this->db->prepare($ex_sql);
