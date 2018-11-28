@@ -138,7 +138,7 @@ $app->group('/api', function () use ($app) {
       $pchx = $this->db->prepare(
         "SELECT pWord FROM users WHERE userName=:userName"
       );
-      $pchx->bindParam("userNAme", $input['userName']);
+      $pchx->bindParam("userName", $input['userName']);
       $pchx->execute();
       $old_pass = $pchx->fetchObject();
       if($old_pass->pWord == $input['pWord']){
