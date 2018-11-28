@@ -175,10 +175,6 @@ $app->group('/api', function () use ($app) {
 
     $app->post('/add-loan', function ($request, $response) {
       $input = $request->getParsedBody();
-      $day = $input['paymentDay'];
-      $month = date('m');
-      $year = date('Y');
-      $isDate = checkdate($month, $day, $year);
       $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest, paymentDay, loanPayment, paid, 
       loanDescription, loanPaidAmt, loanBalance, ogDay) 
       VALUES (:userName, :loanName, :loanAmount, :interest, :paymentDay, :loanPayment, 0, 
@@ -191,8 +187,6 @@ $app->group('/api', function () use ($app) {
       $sth->bindParam("loanPayment", $input['loanPayment']);
       $sth->bindParam("interest", $input['interest']);
       $sth->bindParam("paymentDay", $input['paymentDay']);
-      #$sth->bindParam("ogDay", $input['paymentDay']);
-      #$sth->bindParam("loanBalance", $input['loanAmount']);
       $sth->bindParam("loanDescription", $input['loanDescription']);
       $sth->execute();
       return $this->response->withJson($input); 
@@ -204,7 +198,8 @@ $app->group('/api', function () use ($app) {
           "UPDATE loans
           SET loanAmount=:loanAmount, interest=:interest, paymentDay=:paymentDay, 
           loanPayment=:loanPayment, loanBalance=:loanBalance, loanPaidAmt=:loanPaidAmt, ogDay=:paymentDay
-          WHERE userName=:userName AND loanName=:loanName AND loanDescription=:loanDescription"
+          WHERE userName=:userName AND loanName=:loanName AND loanDescription=:loanDescription;
+          DELETE FROM loans WHERE loanBalance <= 0"
       );
       $sth->bindParam("loanName", $input['loanName']);
       $sth->bindParam("loanAmount", $input['loanAmount']);
