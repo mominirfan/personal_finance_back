@@ -150,10 +150,14 @@ $app->group('/api', function () use ($app) {
 
     $app->post('/add-loan', function ($request, $response) {
       $input = $request->getParsedBody();
+      $day = $input['paymentDay'];
+      $month = date('m');
+      $year = date('Y');
+      $isDate = checkdate($month, $day, $year);
       $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest, paymentDay, loanPayment, paid, 
-      loanDescription, loanPaidAmt, loanBalance) 
+      loanDescription, loanPaidAmt, loanBalance, ogDay) 
       VALUES (:userName, :loanName, :loanAmount, :interest, :paymentDay, :loanPayment, 0, 
-      :loanDescription, 0, :loanAmount);
+      :loanDescription, 0, :loanAmount, :paymentDay);
       UPDATE budgets SET amt = amt + :loanPayment WHERE budgetType = 'Loans' AND userName=:userName";
       $sth = $this->db->prepare($sql);
       $sth->bindParam("userName", $input['userName']);
@@ -162,7 +166,8 @@ $app->group('/api', function () use ($app) {
       $sth->bindParam("loanPayment", $input['loanPayment']);
       $sth->bindParam("interest", $input['interest']);
       $sth->bindParam("paymentDay", $input['paymentDay']);
-      $sth->bindParam("loanBalance", $input['loanAmount']);
+      #$sth->bindParam("ogDay", $input['paymentDay']);
+      #$sth->bindParam("loanBalance", $input['loanAmount']);
       $sth->bindParam("loanDescription", $input['loanDescription']);
       $sth->execute();
       return $this->response->withJson($input); 
