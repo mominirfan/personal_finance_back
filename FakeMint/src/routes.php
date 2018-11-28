@@ -3,6 +3,7 @@
 use Slim\Http\Request;
 use Slim\Http\Response;
 use \Firebase\JWT\JWT;
+use function Monolog\Handler\error_log;
 
 
 
@@ -97,6 +98,30 @@ $app->group('/api', function () use ($app) {
       $sth->execute();
       return $this->response->withJson($input);
     });
+    $app->put('/edit-pass', function ($request, $response, $args) {
+      $input = $request->getParsedBody();
+      $sth = $this->db->prepare(
+          "UPDATE users
+          SET  pWord=:pWord
+          WHERE userName=:userName"
+      );
+      $sth->bindParam("userName", $input['userName']);
+      $sth->bindParam("pWord", $input['pWord']);
+      $sth->execute();
+      return $this->response->withJson($input);
+    });
+    $app->put('/edit-inc', function ($request, $response, $args) {
+      $input = $request->getParsedBody();
+      $sth = $this->db->prepare(
+          "UPDATE users
+          SET  income=:income
+          WHERE userName=:userName"
+      );
+      $sth->bindParam("userName", $input['userName']);
+      $sth->bindParam("income", $input['income']);
+      $sth->execute();
+      return $this->response->withJson($input);
+    });    
 
     $app->put('/edit_bal', function ($request, $response, $args) {
       $input = $request->getParsedBody();
@@ -235,8 +260,8 @@ $app->group('/api', function () use ($app) {
       $input = $request->getParsedBody();
       $sth = $this->db->prepare(
           "UPDATE budgets
-          SET budgetType=:budgetType, amt=:amt
-          WHERE userName=:userName"
+          SET amt=:amt
+          WHERE userName=:userName AND budgetType=:budgetType"
       );
       $sth->bindParam("budgetType", $input['budgetType']);
       $sth->bindParam("amt", $input['amt']);
@@ -318,7 +343,7 @@ $app->group('/api', function () use ($app) {
 
     $app->get('/get-total-spending/[{userName}]', function ($request, $response, $args) {
       $sth = $this->db->prepare(
-        "SELECT exType , SUM(amt) FROM expenses WHERE userName=:userName GROUP BY exType"
+        "SELECT exType , SUM(amt) as amt FROM expenses WHERE userName=:userName GROUP BY exType"
       );
       $sth->bindParam("userName", $args['userName']); $sth->execute();
       $res = $sth->fetchAll();
@@ -350,6 +375,33 @@ $app->group('/api', function () use ($app) {
       $sth->execute();
       return $this->response->withJson($input);
     });
+    $app->get('/get-sugg/[{userName}]', function ($request, $response, $args) {
+      $sth = $this->db->prepare(
+        "SELECT exType, SUM(amt) as amt
+        FROM expenses
+        WHERE userName=:userName
+        GROUP BY exType
+        ORDER BY amt DESC
+        LIMIT 2"
+      );
+      $sth->bindParam("userName", $args['userName']);
+      $sth->execute();
+      $types = $sth->fetchAll();
+      $jsonTypes = json_encode($types);
+      $array = json_decode($jsonTypes,true);
+      $firstST = $array[0]['exType'];
+      $secST = $array[1]['exType'];
+      $quer = $this->db->prepare(
+        "SELECT * FROM suggs WHERE suggType=:firstST OR suggType=:secST"
+      );
+      $quer->bindParam("firstST", $firstST);
+      $quer->bindParam("secST", $secST);
+      $quer->execute();
+      $suggs = $quer->fetchAll();
+
+          return $this->response->withJson($suggs);
+    });
+
 });
 
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
