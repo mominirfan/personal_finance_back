@@ -58,6 +58,7 @@ $app->get('/[{name}]', function (Request $request, Response $response, array $ar
 $app->group('/api', function () use ($app) {
   
     $app->post('/registration', function ($request, $response) {
+      #creates new user
       $input = $request->getParsedBody();
       $sql = "INSERT INTO users (userName, pWord, lastName, firstName, email, income, bal) 
       VALUES (:userName, :pWord, :lastName, :firstName, :email, :income, :bal)";
@@ -70,6 +71,22 @@ $app->group('/api', function () use ($app) {
       $sth->bindParam("income", $input['income']);
       $sth->bindParam("bal", $input['bal']);
       $sth->execute();
+      #creates budget items init to 0
+      
+      $budget_sql = "INSERT INTO budgets (userName, budgetType, active_date, amt) 
+      VALUES (:userName, :budgetType, now(), 0)";
+      
+      $budget_sth = $this->db->prepare($budget_sql);
+      $types = array("Savings","Ent.","Util.","Food","Car","House");
+      $budget_sth->bindParam("userName", $input['userName']);
+      foreach($types as $type){
+        $budget_sth->bindParam("budgetType", $type); 
+        $budget_sth->execute();
+      }
+      
+      
+      
+      
       return $this->response->withJson($input); 
     });
 
