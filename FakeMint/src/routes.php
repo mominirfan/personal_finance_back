@@ -83,6 +83,19 @@ $app->group('/api', function () use ($app) {
         $budget_sth->bindParam("budgetType", $type); 
         $budget_sth->execute();
       }
+      #creates expenses init to 0
+      $ex_sql = "INSERT INTO expenses (userName, exType, active_date, amt) 
+      VALUES (:userName, :exType, now(), 0)";
+      
+      $ex_sth = $this->db->prepare($ex_sql);
+      $extypes = array("Ent.","Util.","Food","Car","House");
+      $ex_sth->bindParam("userName", $input['userName']);
+      foreach($extypes as $extype){
+        $ex_sth->bindParam("exType", $extype); 
+        $ex_sth->execute();
+      }
+
+
       
       
       
