@@ -203,7 +203,7 @@ $app->group('/api', function () use ($app) {
       $sth = $this->db->prepare(
           "UPDATE loans
           SET loanAmount=:loanAmount, interest=:interest, paymentDay=:paymentDay, 
-          loanPayment=:loanPayment, loanBalance=:loanBalance, loanPaidAmt=:loanPaidAmt
+          loanPayment=:loanPayment, loanBalance=:loanBalance, loanPaidAmt=:loanPaidAmt, ogDay=:paymentDay
           WHERE userName=:userName AND loanName=:loanName AND loanDescription=:loanDescription"
       );
       $sth->bindParam("loanName", $input['loanName']);
