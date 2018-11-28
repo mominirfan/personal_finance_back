@@ -135,10 +135,22 @@ $app->group('/api', function () use ($app) {
           SET  pWord=:pWord
           WHERE userName=:userName"
       );
-      $sth->bindParam("userName", $input['userName']);
-      $sth->bindParam("pWord", $input['pWord']);
-      $sth->execute();
-      return $this->response->withJson($input);
+      $pchx = $this->db->prepare(
+        "SELECT pWord FROM users WHERE userName=:userName"
+      );
+      $pchx->bindParam("userNAme", $input['userName']);
+      $pchx->execute();
+      $old_pass = $pchx->fetchObject();
+      if($old_pass->pWord == $input['pWord']){
+        return $this->response->withJson(['error' => true, 'message' => 'You cannot change your password to the same thing it was dummy']);  
+      }
+      if($old_pass->pWord == $input['old_pWord']){
+        $sth->bindParam("userName", $input['userName']);
+        $sth->bindParam("pWord", $input['pWord']);
+        $sth->execute();
+        return $this->response->withJson($input);    
+      }
+      return $this->response->withJson(['error' => true, 'message' => 'Your current password did not match']);  
     });
     $app->put('/edit-inc', function ($request, $response, $args) {
       $input = $request->getParsedBody();
