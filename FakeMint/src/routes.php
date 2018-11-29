@@ -226,22 +226,14 @@ $app->group('/api', function () use ($app) {
       $year = date('Y');
       $day = $input['paymentDay'];
       $isDate = checkdate($month, $day, $year);
-      return $this->response->withJson($isDate);
-      /*$test = $this->db->prepare(
-        "SELECT DATE(CONCAT(YEAR(NOW()),'-',MONTH(NOW()),'-',:paymentDay)) as checkDate"
-      );
-      $test->bindParam("paymentDay", $input['paymentDay']);
-      $test->execute();
-      $check = $test->fetchObject();
-      if($check === null){
-        return $this->response->withJson($check);
-      }*/
-      /*if($check === true){
+      if($isDate == false){
+        $day = mktime(0, 0, 0, $month, 0, $year);
       }
+
       $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest, paymentDay, loanPayment, paid, 
       loanDescription, loanPaidAmt, loanBalance, ogDay) 
-      VALUES (:userName, :loanName, :loanAmount, :interest, :paymentDay, :loanPayment, 0, 
-      :loanDescription, 0, :loanAmount, :paymentDay);
+      VALUES (:userName, :loanName, :loanAmount, :interest, $day, :loanPayment, 0, 
+      :loanDescription, 0, :loanAmount, $day);
       UPDATE budgets SET amt = amt + :loanPayment WHERE budgetType = 'Loans' AND userName=:userName";
       $sth = $this->db->prepare($sql);
       $sth->bindParam("userName", $input['userName']);
@@ -249,10 +241,10 @@ $app->group('/api', function () use ($app) {
       $sth->bindParam("loanAmount", $input['loanAmount']);
       $sth->bindParam("loanPayment", $input['loanPayment']);
       $sth->bindParam("interest", $input['interest']);
-      $sth->bindParam("paymentDay", $input['paymentDay']);
+      #$sth->bindParam("paymentDay", $input['paymentDay']);
       $sth->bindParam("loanDescription", $input['loanDescription']);
       $sth->execute();
-      return $this->response->withJson($input); */
+      return $this->response->withJson($input);
     });
 
     $app->put('/edit-loan', function ($request, $response, $args) {
