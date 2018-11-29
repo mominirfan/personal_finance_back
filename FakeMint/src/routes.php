@@ -225,7 +225,7 @@ $app->group('/api', function () use ($app) {
       $test = $this->db->prepare(
         "SELECT DATE(CONCAT(YEAR(NOW()),'-',MONTH(NOW()),'-',:paymentDay))"
       );
-      $test->bindParam("userName", $input['userName']);
+      $test->bindParam("paymentDay", $input['paymentDay']);
       $test->execute();
       $check = $test->fetchObject();
       return $this->response->withJson($check);
