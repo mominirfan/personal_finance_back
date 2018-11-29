@@ -88,7 +88,7 @@ $app->group('/api', function () use ($app) {
       VALUES (:userName, :exType, now(), 0)";
       
       $ex_sth = $this->db->prepare($ex_sql);
-      $extypes = array("Ent.","Util.","Food","Car","House","Misc.");
+      $extypes = array("Ent.","Util.","Food","Car","House","Misc.","Savings");
       $ex_sth->bindParam("userName", $input['userName']);
       foreach($extypes as $extype){
         $ex_sth->bindParam("exType", $extype); 
