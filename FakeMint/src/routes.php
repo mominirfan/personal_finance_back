@@ -230,9 +230,10 @@ $app->group('/api', function () use ($app) {
 
     $app->get('/test', function ($request, $response) {
       $input = $request->getParsedBody();
-      if(mysqli_query("Select * from users") === TRUE){
-        $input = "hello";
-      }
+      $input = mysqli_query("Select * from users");
+      #if(mysqli_query("Select * from users") === TRUE){
+       # $input = "hello";
+      #}
       return $this->response->withJson($input); 
     });
 
