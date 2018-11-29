@@ -68,7 +68,7 @@ $app->group('/api', function () use ($app) {
       $check = $sql->fetchObject();
       if($check === false){
         $qr = "INSERT INTO users (userName, pWord, lastName, firstName, email, income, bal) 
-        VALUES (:userName, :pWord, :lastName, :firstName, :email, :income, :bal)";
+        VALUES (:userName, :pWord, :lastName, :firstName, :email, :income, 0)";
         $sth = $this->db->prepare($qr);
         $sth->bindParam("userName", $input['userName']);
         $sth->bindParam("pWord", $input['pWord']);
@@ -76,7 +76,7 @@ $app->group('/api', function () use ($app) {
         $sth->bindParam("firstName", $input['firstName']);
         $sth->bindParam("email", $input['email']);
         $sth->bindParam("income", $input['income']);
-        $sth->bindParam("bal", $input['bal']);
+        #$sth->bindParam("bal", $input['bal']);
         $sth->execute();
         #creates budget items init to 0
         
