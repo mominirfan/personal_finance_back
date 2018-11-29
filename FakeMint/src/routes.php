@@ -222,6 +222,15 @@ $app->group('/api', function () use ($app) {
 
     $app->post('/add-loan', function ($request, $response) {
       $input = $request->getParsedBody();
+      $test = $this->db->prepare(
+        "SELECT DATE(CONCAT(YEAR(NOW()),'-',MONTH(NOW()),'-',:paymentDay))"
+      );
+      $test->bindParam("userName", $input['userName']);
+      $test->execute();
+      $check = $test->fetchObject();
+      return $this->response->withJson($check);
+      /*if($check === true){
+      }
       $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest, paymentDay, loanPayment, paid, 
       loanDescription, loanPaidAmt, loanBalance, ogDay) 
       VALUES (:userName, :loanName, :loanAmount, :interest, :paymentDay, :loanPayment, 0, 
@@ -236,20 +245,7 @@ $app->group('/api', function () use ($app) {
       $sth->bindParam("paymentDay", $input['paymentDay']);
       $sth->bindParam("loanDescription", $input['loanDescription']);
       $sth->execute();
-      return $this->response->withJson($input); 
-    });
-
-    $app->get('/test', function ($request, $response) {
-      $input = $request->getParsedBody();
-      $sql = $this->db->prepare(
-        "SELECT userName FROM users WHERE userName=:userName"
-      );
-      $sql->bindParam("userName", $input['userName']);
-      $sql->execute();
-      $check = $sql->fetchObject();
-      if($check){
-        return $this->response->withJson($input);
-      } 
+      return $this->response->withJson($input); */
     });
 
     $app->put('/edit-loan', function ($request, $response, $args) {
