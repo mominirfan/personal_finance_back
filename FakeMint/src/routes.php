@@ -59,6 +59,7 @@ $app->group('/api', function () use ($app) {
   
     $app->post('/registration', function ($request, $response) {
       $input = $request->getParsedBody();
+      $isDuplicate 
       $sql = "INSERT INTO users (userName, pWord, lastName, firstName, email, income, bal) 
       VALUES (:userName, :pWord, :lastName, :firstName, :email, :income, :bal)";
       $sth = $this->db->prepare($sql);
@@ -189,6 +190,14 @@ $app->group('/api', function () use ($app) {
       $sth->bindParam("paymentDay", $input['paymentDay']);
       $sth->bindParam("loanDescription", $input['loanDescription']);
       $sth->execute();
+      return $this->response->withJson($input); 
+    });
+
+    $app->get('/test', function ($request, $response) {
+      $input = $request->getParsedBody();
+      if(mysqli_query("Select * from users") === TRUE){
+        $input = "hello";
+      }
       return $this->response->withJson($input); 
     });
 
