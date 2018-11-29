@@ -222,7 +222,12 @@ $app->group('/api', function () use ($app) {
 
     $app->post('/add-loan', function ($request, $response) {
       $input = $request->getParsedBody();
-      $test = $this->db->prepare(
+      $month = date('m');
+      $year = date('Y');
+      $day = $input['paymentDay'];
+      $isDate = checkdate($month, $day, $year);
+      return $this->response->withJson($isDate);
+      /*$test = $this->db->prepare(
         "SELECT DATE(CONCAT(YEAR(NOW()),'-',MONTH(NOW()),'-',:paymentDay)) as checkDate"
       );
       $test->bindParam("paymentDay", $input['paymentDay']);
@@ -230,8 +235,7 @@ $app->group('/api', function () use ($app) {
       $check = $test->fetchObject();
       if($check === null){
         return $this->response->withJson($check);
-      }
-      return $this->response->withJson('date');
+      }*/
       /*if($check === true){
       }
       $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest, paymentDay, loanPayment, paid, 
