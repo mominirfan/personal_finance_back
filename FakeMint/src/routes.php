@@ -230,11 +230,15 @@ $app->group('/api', function () use ($app) {
 
     $app->get('/test', function ($request, $response) {
       $input = $request->getParsedBody();
-      $input = mysqli_query("Select * from users");
-      #if(mysqli_query("Select * from users") === TRUE){
-       # $input = "hello";
-      #}
-      return $this->response->withJson($input); 
+      $user = $input['userName'];
+      $sql = $this->db->prepare(
+        "SELECT userName FROM users WHERE userName=:userName"
+      );
+      $sql->bindParam("userName", $input['userName']);
+      $sql->execute();
+      $check = $sql->fetchObject();
+      #if($check)
+      return $this->response->withJson($check); 
     });
 
     $app->put('/edit-loan', function ($request, $response, $args) {
