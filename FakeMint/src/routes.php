@@ -60,7 +60,6 @@ $app->group('/api', function () use ($app) {
     $app->post('/registration', function ($request, $response) {
       #creates new user
       $input = $request->getParsedBody();
-      $isDuplicate 
       $sql = "INSERT INTO users (userName, pWord, lastName, firstName, email, income, bal) 
       VALUES (:userName, :pWord, :lastName, :firstName, :email, :income, :bal)";
       $sth = $this->db->prepare($sql);
