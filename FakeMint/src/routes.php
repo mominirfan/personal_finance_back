@@ -58,6 +58,7 @@ $app->get('/[{name}]', function (Request $request, Response $response, array $ar
 $app->group('/api', function () use ($app) {
   
     $app->post('/registration', function ($request, $response) {
+      #creates new user
       $input = $request->getParsedBody();
       $isDuplicate 
       $sql = "INSERT INTO users (userName, pWord, lastName, firstName, email, income, bal) 
@@ -71,6 +72,29 @@ $app->group('/api', function () use ($app) {
       $sth->bindParam("income", $input['income']);
       $sth->bindParam("bal", $input['bal']);
       $sth->execute();
+      #creates budget items init to 0
+      
+      $budget_sql = "INSERT INTO budgets (userName, budgetType, active_date, amt) 
+      VALUES (:userName, :budgetType, now(), 0)";
+      
+      $budget_sth = $this->db->prepare($budget_sql);
+      $types = array("Savings","Ent.","Util.","Food","Car","House","Misc.");
+      $budget_sth->bindParam("userName", $input['userName']);
+      foreach($types as $type){
+        $budget_sth->bindParam("budgetType", $type); 
+        $budget_sth->execute();
+      }
+      #creates expenses init to 0
+      $ex_sql = "INSERT INTO expenses (userName, exType, date, amt) 
+      VALUES (:userName, :exType, now(), 0)";
+      
+      $ex_sth = $this->db->prepare($ex_sql);
+      $extypes = array("Ent.","Util.","Food","Car","House","Misc.","Savings");
+      $ex_sth->bindParam("userName", $input['userName']);
+      foreach($extypes as $extype){
+        $ex_sth->bindParam("exType", $extype); 
+        $ex_sth->execute();
+      }
       return $this->response->withJson($input); 
     });
 
@@ -106,10 +130,22 @@ $app->group('/api', function () use ($app) {
           SET  pWord=:pWord
           WHERE userName=:userName"
       );
-      $sth->bindParam("userName", $input['userName']);
-      $sth->bindParam("pWord", $input['pWord']);
-      $sth->execute();
-      return $this->response->withJson($input);
+      $pchx = $this->db->prepare(
+        "SELECT pWord FROM users WHERE userName=:userName"
+      );
+      $pchx->bindParam("userName", $input['userName']);
+      $pchx->execute();
+      $old_pass = $pchx->fetchObject();
+      if($old_pass->pWord == $input['pWord']){
+        return $this->response->withJson(['error' => true, 'message' => 'You cannot change your password to the same thing it was dummy']);  
+      }
+      if($old_pass->pWord == $input['old_pWord']){
+        $sth->bindParam("userName", $input['userName']);
+        $sth->bindParam("pWord", $input['pWord']);
+        $sth->execute();
+        return $this->response->withJson($input);    
+      }
+      return $this->response->withJson(['error' => true, 'message' => 'Your current password did not match']);  
     });
     $app->put('/edit-inc', function ($request, $response, $args) {
       $input = $request->getParsedBody();
