@@ -227,7 +227,9 @@ $app->group('/api', function () use ($app) {
       $day = $input['paymentDay'];
       $isDate = checkdate($month, $day, $year);
       if($isDate == false){
-        $day = mktime(0, 0, 0, $month, 0, $year);
+        $date = mktime(0, 0, 0, $month, $day, $year);
+        $day = date('t', $date);
+        $input['paymentDay'] = $day;
       }
 
       $sql = "INSERT INTO loans (userName, loanName, loanAmount, interest, paymentDay, loanPayment, paid, 
