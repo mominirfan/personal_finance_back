@@ -227,7 +227,7 @@ $app->group('/api', function () use ($app) {
       $day = $input['paymentDay'];
       $isDate = checkdate($month, $day, $year);
       if($isDate == false){
-        $date = mktime(0, 0, 0, $month, 0, $year);
+        $date = mktime(0, 0, 0, $month+1, 0, $year);
         $day = date('d', $date);
         $input['paymentDay'] = $day;
       }
