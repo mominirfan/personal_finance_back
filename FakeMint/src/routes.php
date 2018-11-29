@@ -66,7 +66,7 @@ $app->group('/api', function () use ($app) {
       $sql->bindParam("userName", $input['userName']);
       $sql->execute();
       $check = $sql->fetchObject();
-      if($check){
+      if($check === false){
         $qr = "INSERT INTO users (userName, pWord, lastName, firstName, email, income, bal) 
         VALUES (:userName, :pWord, :lastName, :firstName, :email, :income, :bal)";
         $sth = $this->db->prepare($qr);
