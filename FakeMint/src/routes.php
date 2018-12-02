@@ -187,7 +187,7 @@ $app->group('/api', function () use ($app) {
     $app->get('/order-loans/[{userName}]', function ($request, $response, $args) {
       $sth = $this->db->prepare(
         "SELECT * FROM loans WHERE userName=:userName
-        AND DATEDIFF(CAST(CONCAT(YEAR(NOW()),'-',MONTH(NOW()),'-',loans.paymentDay) as DATE), NOW()) > 0
+        AND DATEDIFF(CAST(CONCAT(YEAR(NOW()),'-',MONTH(NOW()),'-',loans.paymentDay) as DATE), NOW()) >= 0
         ORDER BY DATEDIFF(CAST(CONCAT(YEAR(NOW()),'-',MONTH(NOW()),'-',loans.paymentDay) as DATE), NOW())"
       );
       $sth->bindParam("userName", $args['userName']); 
